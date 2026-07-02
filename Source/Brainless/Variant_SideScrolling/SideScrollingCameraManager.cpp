@@ -73,7 +73,6 @@ void ASideScrollingCameraManager::UpdateViewTarget(FTViewTarget& OutVT, float De
 		// do we need to do a height update?
 		if (bZUpdate)
 		{
-
 			// set the height goal from the actor location
 			CurrentZ = CurrentActorLocation.Z;
 

@@ -23,6 +23,7 @@ class ABrainlessCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+protected:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -30,8 +31,6 @@ class ABrainlessCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* Camera;
-	
-protected:
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -50,16 +49,13 @@ protected:
 	UInputAction* MouseLookAction;
 
 public:
-
 	/** Constructor */
 	ABrainlessCharacter();	
 
 protected:
-
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-protected:
+	
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
