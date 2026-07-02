@@ -25,8 +25,8 @@ class ABrainlessCharacter : public ACharacter
 
 protected:
 	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	// USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
@@ -39,14 +39,17 @@ protected:
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MoveAction;
+	
+	/** Launch Input Action */
+	UPROPERTY(EditAnywhere, Category="Input")
+	UInputAction* LaunchAction;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* LookAction;
-
-	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* MouseLookAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float SpeedFactor = 1.0f;
 
 public:
 	/** Constructor */
@@ -61,10 +64,14 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	
+	/** Called for launch input */
+	UFUNCTION(BlueprintImplementableEvent, Category="Input")
+	void Launch(const FInputActionValue& Value);
 
 public:
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	// FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetCamera() const { return Camera; }

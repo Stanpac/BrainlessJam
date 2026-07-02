@@ -16,6 +16,7 @@ ABrainlessCharacter::ABrainlessCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	SetRootComponent(GetCapsuleComponent());
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -36,15 +37,15 @@ ABrainlessCharacter::ABrainlessCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
-	CameraBoom->bUsePawnControlRotation = true;
+	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	// CameraBoom->SetupAttachment(RootComponent);
+	// CameraBoom->TargetArmLength = 400.0f;
+	// CameraBoom->bUsePawnControlRotation = true;
 
 	// Create a camera
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	Camera->bUsePawnControlRotation = false;
+	// Camera->SetupAttachment(RootComponent);
+	// Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	// Camera->bUsePawnControlRotation = false;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -61,6 +62,9 @@ void ABrainlessCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Move);
+		
+		// Launching
+		EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Launch);
 		
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Look);
@@ -79,15 +83,16 @@ void ABrainlessCharacter::Move(const FInputActionValue& Value)
 	if (GetController() != nullptr)
 	{
 		// find out which way is forward
-		const FRotator Rotation = GetController()->GetControlRotation();
+		// const FRotator Rotation = GetController()->GetControlRotation();
+		const FRotator Rotation = GetController()->GetViewTarget()->GetActorRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X) * SpeedFactor;
 
 		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y) * SpeedFactor;
+		
 		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
@@ -106,3 +111,4 @@ void ABrainlessCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
