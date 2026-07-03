@@ -12,23 +12,18 @@
 #include "InputActionValue.h"
 #include "Brainless.h"
 
+
 ABrainlessCharacter::ABrainlessCharacter()
 {
-	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	SetRootComponent(GetCapsuleComponent());
-		
-	// Don't rotate when the controller rotates. Let that just affect the camera.
+	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	// Configure character movement
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
-
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
@@ -46,32 +41,22 @@ ABrainlessCharacter::ABrainlessCharacter()
 	// Camera->SetupAttachment(RootComponent);
 	// Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	// Camera->bUsePawnControlRotation = false;
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
 void ABrainlessCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) 
+	{
 		
-		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Move);
-		
-		// Launching
-		EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Launch);
-		
-		// Looking
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Throw);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrainlessCharacter::Look);
 	}
 	else
 	{
-		UE_LOG(LogBrainless, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		UE_LOG(LogBrainless, Error, TEXT("%s : Failed to find an Enhanced Input component!"), *GetNameSafe(this));
 	}
 }
 
@@ -99,6 +84,7 @@ void ABrainlessCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
+// TODO : Use Controller Rotation For Throwing Direction ! 
 void ABrainlessCharacter::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -111,4 +97,12 @@ void ABrainlessCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+// TODO : Implement Throw Function ! 
+/*
+void ABrainlessCharacter::Throw(const FInputActionValue& Value)
+{
+	
+}
+*/
 

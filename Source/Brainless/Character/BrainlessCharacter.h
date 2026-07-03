@@ -42,7 +42,7 @@ protected:
 	
 	/** Launch Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* LaunchAction;
+	UInputAction* ThrowAction;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -67,7 +67,7 @@ protected:
 	
 	/** Called for launch input */
 	UFUNCTION(BlueprintImplementableEvent, Category="Input")
-	void Launch(const FInputActionValue& Value);
+	void Throw(const FInputActionValue& Value);
 
 public:
 	/** Returns CameraBoom subobject **/

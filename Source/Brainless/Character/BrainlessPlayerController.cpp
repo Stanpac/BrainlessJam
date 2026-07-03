@@ -9,19 +9,12 @@
 #include "Brainless.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
-void ABrainlessPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ABrainlessPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
-	// only add IMCs for local player controllers
+	
 	if (IsLocalPlayerController())
 	{
-		// Add Input Mapping Contexts
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
 			for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
